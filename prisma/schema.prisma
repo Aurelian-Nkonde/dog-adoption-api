@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum dogStatus {
+  AVAILABLE
+  PENDING
+  ADOPTED
+}
+
+enum gender {
+  MALE
+  FEMALE
+}
+
+model dog {
+  id           Int       @id @default(autoincrement())
+  name         String
+  dogId        String
+  image        String?
+  status       dogStatus
+  gender       gender
+  color        String
+  disability   Boolean   @default(false)
+  description  String
+  dogOwnerId   String
+  dogAdopteeId String
+}
+
+model user {
+  id          Int     @id @default(autoincrement())
+  userId      String
+  firstName   String
+  lastName    String
+  email       String
+  phoneNumber Int
+  province    String?
+  city        String?
+  gender      gender
+  yearBorn    Int
+}
+
+enum adoptionStatus {
+  PENDING
+  ACTIVE
+  ACCEPTED
+  REJECTED
+  DECLINED
+}
+
+model adoption {
+  id             Int            @id @default(autoincrement())
+  adoptionId     String
+  dogId          String
+  status         adoptionStatus
+  adopteeUserId  String
+  dogOwnerUserId String
+}
+
+enum notificationType {
+  ADOPTION_DECLINED
+  ADOPTION_ACCEPTED
+  ADOPTION_INTERESTED
+}
+
+enum notificationStatus {
+  OPENED
+  PENDING
+}
+
+model notification {
+  id Int @id @default(autoincrement())
+  notificationId String
+  status notificationStatus
+  userId String
+  type notificationType
+}

@@ -1,0 +1,10 @@
+-- CreateTable
+CREATE TABLE `notifaction` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `notificationId` VARCHAR(191) NOT NULL,
+    `status` ENUM('OPENED', 'PENDING') NOT NULL,
+    `userId` VARCHAR(191) NOT NULL,
+    `type` ENUM('ADOPTION_DECLINED', 'ADOPTION_ACCEPTED', 'ADOPTION_INTERESTED') NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
