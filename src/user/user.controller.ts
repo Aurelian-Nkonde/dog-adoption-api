@@ -63,7 +63,7 @@ export class UserController {
     }
   }
 
-  @Put('user/:id')
+  @Put('user/update/:id')
   async updateUser(
     @Req() request: Request,
     @Res() response: Response,
@@ -80,7 +80,7 @@ export class UserController {
     }
   }
 
-  @Delete('user/:id')
+  @Delete('user/delete/:id')
   async deleteUser(
     @Req() request: Request,
     @Res() response: Response,
@@ -96,7 +96,7 @@ export class UserController {
     }
   }
 
-  @Get('count')
+  @Get('total/count')
   async allUsersCount(
     @Req() request: Request,
     @Res() response: Response,

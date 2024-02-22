@@ -15,19 +15,12 @@ import { NextFunction, Request, Response } from 'express';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 
-export interface dogsControllerInterface {
-  getAllDogs(
-    request: Request,
-    response: Response,
-    next: NextFunction,
-  ): Promise<void>;
-  getDog(request, response, next): Promise<void>;
-}
 
 @Controller('dogs')
-export class DogController implements dogsControllerInterface {
+export class DogController {
   constructor(private readonly dogService: DogService) {}
 
+  @Get('/')
   async getAllDogs(
     @Req() request: Request,
     @Res() response: Response,
@@ -51,14 +44,14 @@ export class DogController implements dogsControllerInterface {
     const { id } = request.params;
     try {
       const res = await this.dogService.findSingleDog(Number(id));
-      response.status(HttpStatus.OK).json();
+      response.status(HttpStatus.OK).json(res);
     } catch (error) {
       console.error(error);
       next(error);
     }
   }
 
-  @Put('dog/:id')
+  @Put('dog/update/:id')
   async updateDogDetails(
     @Req() request: Request,
     @Res() response: Response,
@@ -68,14 +61,14 @@ export class DogController implements dogsControllerInterface {
     const { data } = request.body;
     try {
       const res = await this.dogService.updateDogDetails(data, Number(id));
-      response.status(HttpStatus.OK).json();
+      response.status(HttpStatus.OK).json(res);
     } catch (error) {
       console.error(error);
       next(error);
     }
   }
 
-  @Put('dog/status/:id')
+  @Put('dog/update/status/:id')
   async updateDogStatus(
     @Req() request: Request,
     @Res() response: Response,
@@ -84,15 +77,15 @@ export class DogController implements dogsControllerInterface {
     const { id } = request.params;
     const { status } = request.body;
     try {
-      const res = await this.dogService.updateDogDetails(status, Number(id));
-      response.status(HttpStatus.OK).json();
+      const res = await this.dogService.updateDogStatus(status, Number(id));
+      response.status(HttpStatus.OK).json(res);
     } catch (error) {
       console.error(error);
       next(error);
     }
   }
 
-  @Post('dog')
+  @Post('/')
   async createDog(
     @Req() request: Request,
     @Res() response: Response,
@@ -101,14 +94,14 @@ export class DogController implements dogsControllerInterface {
     const { data, userId } = request.body;
     try {
       const res = await this.dogService.createDog(data, userId);
-      response.status(HttpStatus.OK).json();
+      response.status(HttpStatus.OK).json(res);
     } catch (error) {
       console.error(error);
       next(error);
     }
   }
 
-  @Delete('dog/:id')
+  @Delete('dog/delete/:id')
   async deleteDog(
     @Req() request: Request,
     @Res() response: Response,
@@ -117,14 +110,14 @@ export class DogController implements dogsControllerInterface {
     const { id } = request.params;
     try {
       const res = await this.dogService.deleteADog(Number(id));
-      response.status(HttpStatus.OK).json();
+      response.status(HttpStatus.OK).json(res);
     } catch (error) {
       console.error(error);
       next(error);
     }
   }
 
-  @Get('dog/all/count')
+  @Get('all/count')
   async getAllDogsCount(
     @Req() request: Request,
     @Res() response: Response,
@@ -133,14 +126,14 @@ export class DogController implements dogsControllerInterface {
     const { id } = request.params;
     try {
       const res = await this.dogService.allDogsCount();
-      response.status(HttpStatus.OK).json();
+      response.status(HttpStatus.OK).json(res);
     } catch (error) {
       console.error(error);
       next(error);
     }
   }
 
-  @Get('dog/all/count')
+  @Get('available/count')
   async getAvailableDogsCount(
     @Req() request: Request,
     @Res() response: Response,
@@ -149,14 +142,14 @@ export class DogController implements dogsControllerInterface {
     const { id } = request.params;
     try {
       const res = await this.dogService.availableDogsCount();
-      response.status(HttpStatus.OK).json();
+      response.status(HttpStatus.OK).json(res);
     } catch (error) {
       console.error(error);
       next(error);
     }
   }
 
-  @Get('dog/pending/count')
+  @Get('pending/count')
   async getPendingDogsCount(
     @Req() request: Request,
     @Res() response: Response,
@@ -165,14 +158,14 @@ export class DogController implements dogsControllerInterface {
     const { id } = request.params;
     try {
       const res = await this.dogService.pendingDogsCount();
-      response.status(HttpStatus.OK).json();
+      response.status(HttpStatus.OK).json(res);
     } catch (error) {
       console.error(error);
       next(error);
     }
   }
 
-  @Get('dog/adopted/count')
+  @Get('adopted/count')
   async getAdoptedDogsCount(
     @Req() request: Request,
     @Res() response: Response,
@@ -181,7 +174,7 @@ export class DogController implements dogsControllerInterface {
     const { id } = request.params;
     try {
       const res = await this.dogService.adoptedDogsCount();
-      response.status(HttpStatus.OK).json();
+      response.status(HttpStatus.OK).json(res);
     } catch (error) {
       console.error(error);
       next(error);
