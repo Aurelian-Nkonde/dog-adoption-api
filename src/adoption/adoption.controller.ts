@@ -32,16 +32,67 @@ export class AdoptionController {
     }
   }
 
-  @Put('adoption/status/:id')
-  async updateAdoptionStatus(
+  @Put('adoption/status/accepted/:id')
+  async updateAdoptionStatusAccepted(
     @Req() request: Request,
     @Res() response: Response,
     @Next() next: NextFunction,
   ): Promise<void> {
     const { id } = request.params;
-    const { status } = request.body;
     try {
-      const resp = await this.adoptionService.updateStatus(Number(id), status);
+      const resp = await this.adoptionService.updateStatusToAccepted(
+        Number(id),
+      );
+      response.status(HttpStatus.OK).json(resp);
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+
+  @Put('adoption/status/rejected/:id')
+  async updateAdoptionStatusRejected(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Next() next: NextFunction,
+  ): Promise<void> {
+    const { id } = request.params;
+    try {
+      const resp = await this.adoptionService.updateStatusToRejected(
+        Number(id),
+      );
+      response.status(HttpStatus.OK).json(resp);
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+
+  @Put('adoption/status/active/:id')
+  async updateAdoptionStatusActive(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Next() next: NextFunction,
+  ): Promise<void> {
+    const { id } = request.params;
+    try {
+      const resp = await this.adoptionService.updateStatusToActive(Number(id));
+      response.status(HttpStatus.OK).json(resp);
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+
+  @Put('adoption/status/closed/:id')
+  async updateAdoptionStatusClosed(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Next() next: NextFunction,
+  ): Promise<void> {
+    const { id } = request.params;
+    try {
+      const resp = await this.adoptionService.updateStatusToClosed(Number(id));
       response.status(HttpStatus.OK).json(resp);
     } catch (error) {
       console.error(error);
@@ -127,5 +178,4 @@ export class AdoptionController {
       next(error);
     }
   }
- 
 }
