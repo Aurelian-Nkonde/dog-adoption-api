@@ -4,6 +4,8 @@ import {
   Get,
   HttpStatus,
   Next,
+  Post,
+  Put,
   Req,
   Res,
 } from '@nestjs/common';
@@ -13,6 +15,22 @@ import { NextFunction, Request, Response } from 'express';
 @Controller('notifications')
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
+
+  @Post('/')
+  async createNotifications(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Next() next: NextFunction,
+  ): Promise<void> {
+    const { data } = request.body;
+    try {
+      const resp = await this.notificationService.createNotification(data);
+      response.status(HttpStatus.OK).json(resp);
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
 
   @Get('/')
   async getAllNotifications(
@@ -47,7 +65,7 @@ export class NotificationController {
     }
   }
 
-  @Get('notification/read/:id')
+  @Put('notification/read/:id')
   async readNotification(
     @Req() request: Request,
     @Res() response: Response,
@@ -63,7 +81,7 @@ export class NotificationController {
     }
   }
 
-  @Get('notification/find/:id')
+  @Get('notification/:id')
   async findNotification(
     @Req() request: Request,
     @Res() response: Response,

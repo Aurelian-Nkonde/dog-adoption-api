@@ -24,23 +24,24 @@ export interface AdoptionServiceInterface {
 export class AdoptionService implements AdoptionServiceInterface {
   constructor(private prisma: PrismaService) {}
   async createAdoption(data: adoptionInterface): Promise<adoptionInterface> {
-    const newAdoption: adoptionInterface = {
-      adoptionId: generateUniqueAdoptionId(),
-      dogId: data.dogId,
-      status: data.status,
-      adopteeUserId: data.adopteeUserId,
-      dogOwnerUserId: data.dogOwnerUserId,
-    };
     const createdAdoption = await this.prisma.adoption.create({
-      data: newAdoption,
+      data: {
+        adoptionId: generateUniqueAdoptionId(),
+        dogId: data.dogId,
+        status: data.status,
+        adopteeUserId: data.adopteeUserId,
+        dogOwnerUserId: data.dogOwnerUserId,
+      },
     });
+    console.log(createdAdoption);
     return createdAdoption;
   }
 
   async updateStatus(
     adoptionId: number,
-    status: $Enums.adoptionStatus,
+    status: adoptionStatus,
   ): Promise<adoptionInterface> {
+    console.log(status)
     const adoption = await this.prisma.adoption.findUnique({
       where: {
         id: adoptionId,
@@ -127,7 +128,9 @@ export class AdoptionService implements AdoptionServiceInterface {
 
   async getAdoptionsCount(): Promise<number> {
     const adoptions = await this.prisma.adoption.count();
-    if (!adoptions) {
+    console.log(adoptions == null)
+    console.log(adoptions)
+    if (adoptions === null) {
       console.error('Adoptions count is not found');
       throw new Error('Adoptions count is not found');
     }

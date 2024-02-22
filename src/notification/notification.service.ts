@@ -27,15 +27,12 @@ export class NotificationService implements notifactionServiceInterface {
   async createNotification(
     data: notificationInterface,
   ): Promise<notificationInterface> {
-    const notification: notificationInterface = {
-      notificationId: generateUniqueNotificationId(),
-      status: data.status,
-      userId: data.userId,
-      type: data.type,
-    };
     const createdNotification = await this.prisma.notification.create({
       data: {
-        ...notification,
+        notificationId: generateUniqueNotificationId(),
+        status: notificationStatus.PENDING,
+        userId: data.userId,
+        type: data.type,
       },
     });
     return createdNotification;
@@ -77,7 +74,8 @@ export class NotificationService implements notifactionServiceInterface {
         status: notificationStatus.OPENED,
       },
     });
-    return;
+    console.log(readNotifi);
+    return 
   }
 
   async findNotification(
@@ -130,7 +128,7 @@ export class NotificationService implements notifactionServiceInterface {
 
   async findTotalOfAllNotifications(): Promise<number> {
     const notificationsCount = this.prisma.notification.count();
-    if (!notificationsCount) {
+    if (notificationsCount === null) {
       console.error('notifications count is not found');
       throw new Error('notifications count is not found');
     }
@@ -143,7 +141,7 @@ export class NotificationService implements notifactionServiceInterface {
         status: notificationStatus.OPENED,
       },
     });
-    if (!notificationsCount) {
+    if (notificationsCount === null) {
       console.error('notifications count is not found');
       throw new Error('notifications count is not found');
     }
@@ -156,7 +154,7 @@ export class NotificationService implements notifactionServiceInterface {
         status: notificationStatus.PENDING,
       },
     });
-    if (!notificationsCount) {
+    if (notificationsCount === null) {
       console.error('notifications count is not found');
       throw new Error('notifications count is not found');
     }

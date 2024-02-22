@@ -5,7 +5,7 @@ export function generateUniqueUserId(): string {
     length: 20,
     dictionary: 'alphanum_lower',
   });
-  return String(response);
+  return response.rnd();
 }
 
 export function generateUniqueDogId() {
@@ -13,15 +13,14 @@ export function generateUniqueDogId() {
     length: 15,
     dictionary: 'alphanum_lower',
   });
-  return String(response);
+  return response.rnd();
 }
 
-export function generateUniqueAdoptionId(): string {
-  const response = new ShortUniqueId({
+export function generateUniqueAdoptionId() {
+  return new ShortUniqueId({
     length: 15,
     dictionary: 'alphanum_upper',
-  });
-  return String(response);
+  }).rnd();
 }
 
 export function generateUniqueNotificationId(): string {
@@ -29,5 +28,5 @@ export function generateUniqueNotificationId(): string {
     length: 15,
     dictionary: 'alphanum_upper',
   });
-  return String(response);
+  return response.rnd()
 }

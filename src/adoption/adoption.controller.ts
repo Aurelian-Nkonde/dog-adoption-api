@@ -1,7 +1,131 @@
-import { Controller } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  Next,
+  Post,
+  Put,
+  Req,
+  Res,
+} from '@nestjs/common';
 import { AdoptionService } from './adoption.service';
+import { NextFunction, Request, Response } from 'express';
 
-@Controller('adoption')
+@Controller('adoptions')
 export class AdoptionController {
   constructor(private readonly adoptionService: AdoptionService) {}
+
+  @Post('/')
+  async createAdoption(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Next() next: NextFunction,
+  ): Promise<void> {
+    const { data } = request.body;
+    try {
+      const resp = await this.adoptionService.createAdoption(data);
+      response.status(HttpStatus.OK).json(resp);
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+
+  @Put('adoption/status/:id')
+  async updateAdoptionStatus(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Next() next: NextFunction,
+  ): Promise<void> {
+    const { id } = request.params;
+    const { status } = request.body;
+    try {
+      const resp = await this.adoptionService.updateStatus(Number(id), status);
+      response.status(HttpStatus.OK).json(resp);
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+
+  @Put('adoption/update/:id')
+  async updateAdoption(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Next() next: NextFunction,
+  ): Promise<void> {
+    const { id } = request.params;
+    const { data } = request.body;
+    try {
+      const resp = await this.adoptionService.updateAdoption(data, Number(id));
+      response.status(HttpStatus.OK).json(resp);
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+
+  @Delete('adoption/delete/:id')
+  async deleteAdoption(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Next() next: NextFunction,
+  ): Promise<void> {
+    const { id } = request.params;
+    try {
+      const resp = await this.adoptionService.deleteAdoption(Number(id));
+      response.status(HttpStatus.OK).json(resp);
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+
+  @Get('adoption/:id')
+  async getAdoption(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Next() next: NextFunction,
+  ): Promise<void> {
+    const { id } = request.params;
+    try {
+      const resp = await this.adoptionService.getAdoption(Number(id));
+      response.status(HttpStatus.OK).json(resp);
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+
+  @Get('/')
+  async getAllAdoption(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Next() next: NextFunction,
+  ): Promise<void> {
+    try {
+      const resp = await this.adoptionService.getAllAdoptions();
+      response.status(HttpStatus.OK).json(resp);
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+
+  @Get('total/count')
+  async getAllAdoptionCount(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Next() next: NextFunction,
+  ): Promise<void> {
+    try {
+      const resp = await this.adoptionService.getAdoptionsCount();
+      response.status(HttpStatus.OK).json(resp);
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+ 
 }

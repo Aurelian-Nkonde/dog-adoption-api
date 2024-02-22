@@ -41,7 +41,7 @@ model user {
   firstName   String
   lastName    String
   email       String
-  phoneNumber Int
+  phoneNumber String
   province    String?
   city        String?
   gender      gender

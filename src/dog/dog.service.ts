@@ -23,6 +23,10 @@ export class DogService implements dogsServiceInterface {
 
   async findAllDogs(): Promise<dogInterface[]> {
     const dogs = await this.prisma.dog.findMany();
+    if (!dogs) {
+      console.error('Dogs is not found');
+      throw new Error('Dogs is not found');
+    }
     return dogs;
   }
 
@@ -32,10 +36,23 @@ export class DogService implements dogsServiceInterface {
         id: dogIds,
       },
     });
+    if (!dog) {
+      console.error('Dog is not found');
+      throw new Error('Dog is not found');
+    }
     return dog;
   }
 
   async updateDogDetails(data: any, dogId: number): Promise<dogInterface> {
+    const dog = await this.prisma.dog.findUnique({
+      where: {
+        id: dogId,
+      },
+    });
+    if (!dog) {
+      console.error('Dog is not found');
+      throw new Error('Dog is not found');
+    }
     const updatedDog = await this.prisma.dog.update({
       where: { id: dogId },
       data: {
@@ -49,6 +66,15 @@ export class DogService implements dogsServiceInterface {
     status: dogStatus,
     dogId: number,
   ): Promise<dogInterface> {
+    const dog = await this.prisma.dog.findUnique({
+      where: {
+        id: dogId,
+      },
+    });
+    if (!dog) {
+      console.error('Dog is not found');
+      throw new Error('Dog is not found');
+    }
     const updatedDog = await this.prisma.dog.update({
       where: { id: dogId },
       data: {
@@ -71,60 +97,92 @@ export class DogService implements dogsServiceInterface {
       console.error('The dog already exists');
       throw new BadRequestException('Dog already exists');
     }
-    const newDog: dogInterface = {
-      name: data.name,
-      dogId: generateUniqueDogId(),
-      image: data.image,
-      status: 'AVAILABLE',
-      gender: data.gender,
-      color: data.color,
-      disability: data.disability,
-      description: data.description,
-      dogOwnerId: dogOwner,
-      dogAdopteeId: '',
-    };
     const createdNewDog = await this.prisma.dog.create({
       data: {
-        ...newDog,
+        name: data.name,
+        dogId: generateUniqueDogId(),
+        image: data.image,
+        status: 'AVAILABLE',
+        gender: data.gender,
+        color: data.color,
+        disability: data.disability,
+        description: data.description,
+        dogOwnerId: dogOwner,
+        dogAdopteeId: data.dogAdopteeId,
       },
     });
+    console.log(createdNewDog);
     return createdNewDog;
   }
 
   async deleteADog(dogId: number): Promise<dogInterface> {
+    const dog = await this.prisma.dog.findUnique({
+      where: {
+        id: dogId,
+      },
+    });
+    if (!dog) {
+      console.error('Dog is not found');
+      throw new Error('Dog is not found');
+    }
     const deletedDog = await this.prisma.dog.delete({
       where: {
         id: dogId,
       },
     });
+    console.log(dog);
     return deletedDog;
   }
 
   async allDogsCount(): Promise<number> {
-    return this.prisma.dog.count();
+    const dogsCount = await this.prisma.dog.count();
+    if (dogsCount === null) {
+      console.error('Dogs count is not found');
+      throw new Error('Dogs count is not found');
+    }
+    console.log(dogsCount);
+    return dogsCount;
   }
 
   async availableDogsCount(): Promise<number> {
-    return this.prisma.dog.count({
+    const dogsCount = await this.prisma.dog.count({
       where: {
         status: dogStatus.AVAILABLE,
       },
     });
+    if (dogsCount === null) {
+      console.error('available dogs count is not found');
+      throw new Error('available dogs count is not found');
+    }
+    console.log(dogsCount);
+    return dogsCount;
   }
 
   async pendingDogsCount(): Promise<number> {
-    return this.prisma.dog.count({
+    const dogsCount = await this.prisma.dog.count({
       where: {
         status: dogStatus.PENDING,
       },
     });
+    if (dogsCount === null) {
+      console.error('pending dogs count is not found');
+      throw new Error('pending dogs count is not found');
+    }
+    console.log(dogsCount);
+    return dogsCount;
   }
 
   async adoptedDogsCount(): Promise<number> {
-    return this.prisma.dog.count({
+    const dogsCount = await this.prisma.dog.count({
       where: {
         status: dogStatus.ADOPTED,
       },
     });
+    if (dogsCount === null) {
+      console.error('adopted dogs count is not found');
+      throw new Error('adopted dogs count is not found');
+    }
+    console.log(dogsCount);
+    return dogsCount;
   }
 }

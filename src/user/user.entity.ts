@@ -6,7 +6,7 @@ export interface UserInterface {
   firstName: string;
   lastName: string;
   email: string;
-  phoneNumber: number;
+  phoneNumber: string;
   province: string;
   city: string;
   gender: gender;
