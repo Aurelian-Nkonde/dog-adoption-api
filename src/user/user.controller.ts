@@ -1,9 +1,12 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
   HttpStatus,
   Next,
+  Param,
+  ParseIntPipe,
   Post,
   Put,
   Req,
@@ -11,6 +14,9 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { NextFunction, Request, Response } from 'express';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UserInterface } from './user.entity';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UserController {
@@ -36,8 +42,18 @@ export class UserController {
     @Req() request: Request,
     @Res() response: Response,
     @Next() next: NextFunction,
+    @Body() createUserDto: CreateUserDto,
   ): Promise<void> {
-    const { data } = request.body;
+    const data: UserInterface = {
+      firstName: createUserDto.firstName,
+      lastName: createUserDto.lastName,
+      email: createUserDto.email,
+      phoneNumber: createUserDto.phoneNumber,
+      province: createUserDto.province,
+      city: createUserDto.city,
+      gender: createUserDto.gender,
+      yearBorn: Number(createUserDto.yearBorn),
+    };
     try {
       const res = await this.userService.createUser(data);
       response.status(HttpStatus.OK).json(res);
@@ -52,8 +68,8 @@ export class UserController {
     @Req() request: Request,
     @Res() response: Response,
     @Next() next: NextFunction,
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<void> {
-    const { id } = request.params;
     try {
       const res = await this.userService.findUser(Number(id));
       response.status(HttpStatus.OK).json(res);
@@ -68,9 +84,18 @@ export class UserController {
     @Req() request: Request,
     @Res() response: Response,
     @Next() next: NextFunction,
+    @Body() updateUserDto: UpdateUserDto,
   ): Promise<void> {
     const { id } = request.params;
-    const { data } = request.body;
+    const data: UserInterface = {
+      firstName: updateUserDto.firstName,
+      lastName: updateUserDto.lastName,
+      email: updateUserDto.email,
+      phoneNumber: updateUserDto.phoneNumber,
+      province: updateUserDto.province,
+      city: updateUserDto.city,
+      yearBorn: Number(updateUserDto.yearBorn),
+    };
     try {
       const res = await this.userService.updateUser(data, Number(id));
       response.status(HttpStatus.OK).json(res);

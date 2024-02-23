@@ -9,6 +9,6 @@ export interface UserInterface {
   phoneNumber: string;
   province: string;
   city: string;
-  gender: gender;
+  gender?: gender;
   yearBorn: number;
 }

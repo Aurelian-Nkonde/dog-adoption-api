@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -11,6 +12,9 @@ import {
 } from '@nestjs/common';
 import { AdoptionService } from './adoption.service';
 import { NextFunction, Request, Response } from 'express';
+import { UpdateAdoptionDto } from './dto/update-adoption-sto';
+import { adoptionInterface } from './adoption.entity';
+import { CreateAdoptionDto } from './dto/create-adoption.dto';
 
 @Controller('adoptions')
 export class AdoptionController {
@@ -21,8 +25,12 @@ export class AdoptionController {
     @Req() request: Request,
     @Res() response: Response,
     @Next() next: NextFunction,
+    @Body() createAdoptionDto: CreateAdoptionDto,
   ): Promise<void> {
-    const { data } = request.body;
+    const data: adoptionInterface = {
+      adopteeUserId: createAdoptionDto.adopteeUserId,
+      dogOwnerUserId: createAdoptionDto.dogOwnerUserId,
+    };
     try {
       const resp = await this.adoptionService.createAdoption(data);
       response.status(HttpStatus.OK).json(resp);
@@ -105,9 +113,14 @@ export class AdoptionController {
     @Req() request: Request,
     @Res() response: Response,
     @Next() next: NextFunction,
+    @Body() updateAdoptionDto: UpdateAdoptionDto,
   ): Promise<void> {
     const { id } = request.params;
-    const { data } = request.body;
+    const data: adoptionInterface = {
+      status: updateAdoptionDto.status,
+      adopteeUserId: updateAdoptionDto.adopteeUserId,
+      dogOwnerUserId: updateAdoptionDto.dogOwnerUserId,
+    };
     try {
       const resp = await this.adoptionService.updateAdoption(data, Number(id));
       response.status(HttpStatus.OK).json(resp);
