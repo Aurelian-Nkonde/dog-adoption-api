@@ -4,7 +4,7 @@ export interface adoptionInterface {
   id?: number;
   adoptionId?: string;
   dogId?: string;
-  status: adoptionStatus;
+  status?: adoptionStatus;
   adopteeUserId: string;
   dogOwnerUserId: string;
 }

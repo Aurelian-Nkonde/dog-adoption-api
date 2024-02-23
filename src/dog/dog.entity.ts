@@ -5,8 +5,8 @@ export interface dogInterface {
   name: string;
   dogId?: string;
   image: string;
-  status: dogStatus;
-  gender: gender;
+  status?: dogStatus;
+  gender?: gender;
   color: string;
   disability: boolean;
   description: string;

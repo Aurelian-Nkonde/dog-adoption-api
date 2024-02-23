@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -14,7 +15,8 @@ import { dogInterface } from './dog.entity';
 import { NextFunction, Request, Response } from 'express';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
-
+import { CreateDogDto } from './dto/create-dog.dto';
+import { UpdateDogDto } from './dto/update-dog.dto';
 
 @Controller('dogs')
 export class DogController {
@@ -56,9 +58,17 @@ export class DogController {
     @Req() request: Request,
     @Res() response: Response,
     @Next() next: NextFunction,
+    @Body() updateDogDto: UpdateDogDto,
   ): Promise<void> {
     const { id } = request.params;
-    const { data } = request.body;
+    const data: dogInterface = {
+      name: updateDogDto.name,
+      image: updateDogDto.image,
+      color: updateDogDto.color,
+      disability: updateDogDto.disability,
+      description: updateDogDto.description,
+      dogAdopteeId: updateDogDto.adopteeUserId,
+    };
     try {
       const res = await this.dogService.updateDogDetails(data, Number(id));
       response.status(HttpStatus.OK).json(res);
@@ -90,8 +100,17 @@ export class DogController {
     @Req() request: Request,
     @Res() response: Response,
     @Next() next: NextFunction,
+    @Body() createDogDto: CreateDogDto,
   ): Promise<void> {
-    const { data, userId } = request.body;
+    const data: dogInterface = {
+      name: createDogDto.name,
+      image: createDogDto.image,
+      color: createDogDto.color,
+      disability: createDogDto.disability,
+      description: createDogDto.description,
+      dogAdopteeId: createDogDto.adopteeUserId,
+    };
+    const userId = createDogDto.dogOwnerId;
     try {
       const res = await this.dogService.createDog(data, userId);
       response.status(HttpStatus.OK).json(res);
